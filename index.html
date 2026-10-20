@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Online Quiz App with 8 distinct subjects, 15-second timer per question, instant feedback, and detailed performance breakdown." />
+  <title>Online Quiz Master | 8 Subjects Challenge</title>
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="glow-orb orb-1" aria-hidden="true"></div>
+  <div class="glow-orb orb-2" aria-hidden="true"></div>
+  <div class="glow-orb orb-3" aria-hidden="true"></div>
+
+  <main class="quiz-app-container">
+
+    <!-- ==============================================
+         PHASE 1: SUBJECT SELECTION SCREEN (STARTING PAGE)
+         ============================================== -->
+    <section id="subject-screen" class="screen-card active" aria-labelledby="subject-screen-title">
+      <div class="welcome-header">
+        <div class="badge-tag">
+          <span class="badge-dot"></span> Interactive Knowledge Test
+        </div>
+        <h1 id="subject-screen-title" class="title">Choose Your Quiz Subject</h1>
+        <p class="subtitle">Select one subject from the 8 topics below to begin your 10-question challenge. Each question has a 15-second timer!</p>
+      </div>
+
+      <!-- Selected subject status banner -->
+      <div class="selected-status-bar" id="selected-status-bar" style="display: none;">
+        <span>Selected Subject:</span>
+        <strong id="selected-subject-label">—</strong>
+      </div>
+
+      <!-- 8 Subject Cards Grid (Populated dynamically from questions.js) -->
+      <div class="subjects-grid" id="subjects-grid" role="radiogroup" aria-label="Select a quiz subject">
+        <!-- Injected dynamically by script.js -->
+      </div>
+
+      <!-- Subject Selection Action Footer -->
+      <div class="subject-action-bar">
+        <p class="selection-hint" id="selection-hint">Please click on a subject card above to activate the quiz.</p>
+        <button id="start-quiz-btn" class="btn btn-primary btn-large" type="button" disabled>
+          <span>Start Quiz</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         PHASE 3: ACTIVE QUIZ GAME SCREEN
+         ============================================== -->
+    <section id="quiz-screen" class="screen-card" aria-labelledby="question-text" style="display: none;">
+      <!-- Quiz Header: Subject Badge & Timer -->
+      <header class="quiz-header">
+        <div class="header-left">
+          <span class="subject-badge" id="quiz-current-subject">
+            <span id="quiz-subject-icon">💻</span>
+            <span id="quiz-subject-name">Computer Science</span>
+          </span>
+          <div class="question-tracker">
+            <span class="tracker-counter">
+              Question <strong id="current-question-num">1</strong> / <span id="total-questions-num">10</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="timer-badge" id="timer-badge" aria-label="Time remaining" role="timer">
+          <svg class="timer-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span class="timer-text"><span id="timer-count">15</span>s</span>
+        </div>
+      </header>
+
+      <!-- Visual Progress Bar -->
+      <div class="progress-bar-wrapper" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+      </div>
+
+      <!-- Question Card Body -->
+      <div class="question-body">
+        <h2 id="question-text" class="question-title">Loading question...</h2>
+
+        <!-- 4 Options Container -->
+        <div id="options-container" class="options-grid" role="group" aria-label="Answer options">
+          <!-- Dynamically populated via script.js -->
+        </div>
+
+        <!-- Real-time Feedback Hint -->
+        <div id="feedback-alert" class="feedback-alert" aria-live="polite"></div>
+      </div>
+
+      <!-- Quiz Footer: Score pill & Next Question Button -->
+      <footer class="quiz-footer">
+        <div class="score-pill">
+          Score: <strong id="live-score">0</strong> / 10
+        </div>
+        <button id="next-btn" class="btn btn-primary" type="button" disabled>
+          <span id="next-btn-text">Next Question</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </footer>
+    </section>
+
+    <!-- ==============================================
+         PHASE 4: RESULTS & RESTART SCREEN
+         ============================================== -->
+    <section id="result-screen" class="screen-card" aria-labelledby="result-title" style="display: none;">
+      <div class="result-hero">
+        <div class="result-badge-icon" id="result-badge-icon">🏆</div>
+        <span class="badge-tag" id="result-subject-tag">Computer Science</span>
+        <h2 id="result-title" class="title">Quiz Completed!</h2>
+        <p class="subtitle" id="performance-message">Here is your complete performance breakdown.</p>
+      </div>
+
+      <!-- Score Ring Display -->
+      <div class="score-display-card">
+        <div class="score-percentage-circle">
+          <span class="score-percentage-number" id="final-percentage">0%</span>
+          <span class="score-percentage-sub">Accuracy</span>
+        </div>
+        <div class="score-primary-stat">
+          Final Score: <span class="highlight-score"><strong id="final-score">0</strong> / 10</span>
+        </div>
+        <div class="performance-pill" id="performance-pill">Mastermind</div>
+      </div>
+
+      <!-- 3 Metrics Breakdown -->
+      <div class="metrics-grid">
+        <div class="metric-card metric-correct">
+          <div class="metric-icon">✓</div>
+          <div class="metric-info">
+            <span class="metric-val" id="count-correct">0</span>
+            <span class="metric-name">Correct</span>
+          </div>
+        </div>
+
+        <div class="metric-card metric-wrong">
+          <div class="metric-icon">✕</div>
+          <div class="metric-info">
+            <span class="metric-val" id="count-wrong">0</span>
+            <span class="metric-name">Incorrect</span>
+          </div>
+        </div>
+
+        <div class="metric-card metric-skipped">
+          <div class="metric-icon">⏳</div>
+          <div class="metric-info">
+            <span class="metric-val" id="count-unanswered">0</span>
+            <span class="metric-name">Unanswered</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Primary Action Buttons: Play Again & Choose Another Subject -->
+      <div class="result-actions">
+        <button id="play-again-btn" class="btn btn-primary btn-large" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+          <span>Play Again (Same Subject)</span>
+        </button>
+
+        <button id="change-subject-btn" class="btn btn-secondary btn-large" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Choose Another Subject</span>
+        </button>
+
+        <button id="toggle-review-btn" class="btn btn-outline" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span id="review-btn-text">Review Questions &amp; Answers</span>
+        </button>
+      </div>
+
+      <!-- Expandable Question-by-Question Review Section -->
+      <div id="review-container" class="review-container" style="display: none;">
+        <h3 class="review-heading">Detailed Question Review</h3>
+        <div id="review-list" class="review-list">
+          <!-- Populated by script.js -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-credit">
+    Online Quiz App &bull; Built with HTML, CSS &amp; Vanilla JavaScript
+  </footer>
+
+  <!-- Include Question Bank first, then main logic -->
+  <script src="questions.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
