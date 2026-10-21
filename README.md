@@ -22,11 +22,7 @@ An interactive and user-friendly web application that allows users to select the
 ## 🚀 How to Run
 
 1. Clone this repository:
-
-   ```bash
-   git clone YOUR_REPOSITORY_URL
-   ```
-
+https://github.com/thriveni-sa/Online-quiz.git
 2. Open the project folder in your code editor.
 3. Open `index.html` in your web browser.
 
